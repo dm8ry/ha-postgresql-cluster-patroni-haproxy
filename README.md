@@ -299,6 +299,7 @@ Testing High Availability Cluster Setup of PostgreSQL:
 ```
 http://<haproxynode_ip>:7000/
 ```
+![screenshot](https://github.com/dm8ry/ha-postgresql-cluster-patroni-haproxy/blob/master/screenshot_20201228_232724.png?raw=true "screenshot")
 
 Simulate node1 crush:
 
