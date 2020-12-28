@@ -1,7 +1,6 @@
-Highly Available PostgreSQL Cluster 
-using Patroni and HAProxy
+## Highly Available PostgreSQL Cluster using Patroni and HAProxy
 
-
+```
 OS: Ubuntu 20.04
 
 Postgres version: 12
@@ -13,6 +12,7 @@ Machine: node2			IP: <node2_ip>		Role: Postgresql, Patroni
 Machine: node3			IP: <node3_ip>		Role: Postgresql, Patroni
 Machine: etcdnode			IP: <etcdnode_ip>		Role: etcd
 Machine: haproxynode		IP: <haproxynode_ip> 	Role:HA Proxy
+```
 
 Description:
 
@@ -26,21 +26,14 @@ All Postgres clients (= our applications, psql, ...) will connect to HAProxy whi
  
 HAProxy is free, open source software that provides a high availability load balancer and proxy server for TCP and HTTP-based applications that spreads requests across multiple servers.
 
-
-
-
 Schema:
 
-
-
- 
- 
- 
 
 Step-by-step instructions:
 
 Setup node1, node2, node3:
 
+```
 sudo apt update
 
 sudo hostnamectl set-hostname nodeN
@@ -74,10 +67,11 @@ sudo hostnamectl set-hostname etcdnode
 sudo apt install net-tools
 
 sudo apt -y install etcd 
-
+```
 
 Setup haproxynode:
 
+```
 sudo apt update
 
 sudo hostnamectl set-hostname haproxynode
@@ -85,9 +79,11 @@ sudo hostnamectl set-hostname haproxynode
 sudo apt install net-tools
 
 sudo apt -y install haproxy
+```
 
 Configure etcd on the etcdnode: 
 
+```
 sudo vi /etc/default/etcd   
 
 ETCD_LISTEN_PEER_URLS="http://<etcdnode_ip>:2380"
@@ -103,9 +99,11 @@ sudo systemctl restart etcd
 sudo systemctl status etcd
 
 curl http://<etcdnode_ip>:2380/members
+```
 
 Configure Patroni on the node1, on the node2 and on the node3:
 
+```
 sudo vi /etc/patroni.yml
 
 scope: postgres
@@ -193,9 +191,11 @@ Restart=no
 
 [Install]
 WantedBy=multi-user.targ
+```
 
 Start Patroni service on the node1, on the node2 and on the node3:
 
+```
 sudo systemctl start patroni
 
 sudo systemctl status patroni
@@ -228,14 +228,17 @@ Sep 11 06:44:16 node1 patroni[3430]: 2020-09-11 06:44:16,404 INFO: Lock owner: n
 Sep 11 06:44:16 node1 patroni[3430]: 2020-09-11 06:44:16,407 INFO: no action.  i am the leader with the lock
 Sep 11 06:44:26 node1 patroni[3430]: 2020-09-11 06:44:26,404 INFO: Lock owner: node1; I am node1
 Sep 11 06:44:26 node1 patroni[3430]: 2020-09-11 06:44:26,408 INFO: no action.  i am the leader with the lock
-
+```
 
 Configuring HA Proxy on the node haproxynode:
 
+```
 	sudo vi /etc/haproxy/haproxy.cfg
+```
 
 Replace its context with this:
 
+```
 global
 
         maxconn 100
@@ -287,25 +290,26 @@ Sep 11 06:54:22 haproxynode haproxy[1751]: [NOTICE] 254/065422 (1751) : New work
 Sep 11 06:54:22 haproxynode systemd[1]: Started HAProxy Load Balancer.
 Sep 11 06:54:23 haproxynode haproxy[1753]: [WARNING] 254/065423 (1753) : Server postgres/node2 is DOWN, reason: Layer7 wrong status, code: 503, info: "HTTP status check returned code <3C>503<3E>">
 Sep 11 06:54:24 haproxynode haproxy[1753]: [WARNING] 254/065424 (1753) : Server postgres/node3 is DOWN, reason: Layer7 wrong status, code: 503, info: "HTTP status check returned code <3C>503<3E>">
- 
+```
 
 
 Testing High Availability Cluster Setup of PostgreSQL:
 
+```
 http://<haproxynode_ip>:7000/
-
+```
 
 Simulate node1 crush:
 
+```
 sudo systemctl stop patroni
+```
 
 In this case, the second Postgres server is promoted to master. 
 
-
-
-
 Connect Postgres clients to the HAProxy IP address:
 
+```
 psql -h <haproxynode_ip> -p 5000 -U postgres
 
 dmitryr@dmitryr-mac ~ % psql -h 192.168.1.115 -p 5000 -U postgres
@@ -332,15 +336,15 @@ dmi@node1:~$ patronictl -c /etc/patroni.yml list
 | node3  | 192.168.1.146 | Replica | running |  2 |         0 |
 +--------+---------------+---------+---------+----+-----------+
 dmi@node1:~$ 
+```
 
 Failover Test:
 
 On one of the nodes run:
 
+```
 sudo systemctl stop patroni
-
-
-
+```
 
 Further improvements:
 
