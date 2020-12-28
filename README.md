@@ -28,6 +28,7 @@ HAProxy is free, open source software that provides a high availability load bal
 
 Schema:
 
+(https://github.com/dm8ry/ha-postgresql-cluster-patroni-haproxy/blob/master/screenshot_20201228_231011.png)
 
 Step-by-step instructions:
 
