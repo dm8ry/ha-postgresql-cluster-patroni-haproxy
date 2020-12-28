@@ -10,7 +10,7 @@ Architecture:
 Machine: node1			IP: <node1_ip>		Role: Postgresql, Patroni
 Machine: node2			IP: <node2_ip>		Role: Postgresql, Patroni
 Machine: node3			IP: <node3_ip>		Role: Postgresql, Patroni
-Machine: etcdnode			IP: <etcdnode_ip>		Role: etcd
+Machine: etcdnode		IP: <etcdnode_ip>		Role: etcd
 Machine: haproxynode		IP: <haproxynode_ip> 	Role:HA Proxy
 ```
 
