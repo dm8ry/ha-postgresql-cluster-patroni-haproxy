@@ -349,9 +349,10 @@ sudo systemctl stop patroni
 
 Further improvements:
 
+```
 larger etcd cluster to improve availability
 PgBouncer to pool connections. 
 add another HAProxy server and configure IP failover to create a highly available HAProxy cluster
 translate to k8s implementation
-
+```
 
